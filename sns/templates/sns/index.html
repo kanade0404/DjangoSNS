@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!--CSSの読込-->
+    <link rel="stylesheet" type="text/css" href="{% static 'sns/css/index.css' %}" />
+    <title>{{ title }}</title>
+</head>
+<body>
+<h1>{{ title }}</h1>
+<p>{{ message|safe }}</p>
+<table>
+    <tr>
+        <th>id</th>
+        <th>name</th>
+        <th>age</th>
+        <th>email</th>
+        <th>birthday</th>
+        <th></th>
+        <th></th>
+    </tr>
+    {% for item in data %}
+        <tr>
+            <td>{{ item.id }}</td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.age }}</td>
+            <td>{{ item.mail }}</td>
+            <td>{{ item.birthday }}</td>
+            <td><a href="{% url 'edit' item.id %}">Edit</a></td>
+            <td><a href="{% url 'delete' item.id %}">Delete</a></td>
+        </tr>
+    {% endfor %}
+</table>
+<div class="pagination">
+    {% if data.has_previous %}
+        <a href="{% url 'index' %}">&laquo;first</a>
+        <a href="{% url 'index' %}{{ data.previous_page_number }}">&laquo;prev</a>
+    {% endif %}
+    <span class="current">
+        [{{ data.number }}/{{ data.paginator.num_pages }}]
+    </span>
+    {% if data.has_next %}
+        <a href="{% url 'index' %}{{ data.next_page_number }}">next&raquo;</a>
+        <a href="{% url 'index' %}{{ data.paginator.num_pages }}">last&raquo;</a>
+    {% endif %}
+</div>
+</body>
+</html>

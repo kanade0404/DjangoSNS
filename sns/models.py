@@ -6,7 +6,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator, MinLeng
 
 class Message(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='message_owner')
-    group = models.ForeignKey('Group', on_delete=models.CASCADE)
+    group = models.ForeignKey("Group", on_delete=models.CASCADE, db_column='group_id', default=-1)
     content = models.TextField(max_length=200)
     share_id = models.IntegerField(default=-1)
     good_count = models.IntegerField(default=0)
@@ -47,10 +47,3 @@ class Good(models.Model):
     def __str__(self):
         return 'good for {0}(by{1})'.format(self.message, self.owner)
 
-
-def number_only(value):
-    if re.match(r'^[0-9]*$', value) == None:
-        raise ValidationError(
-            '%(value)s is not Number',
-            params={'value': value},
-        )

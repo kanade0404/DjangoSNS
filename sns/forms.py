@@ -52,7 +52,7 @@ class GroupSelectForm(forms.Form):
     def __init__(self, user, *args, **kwargs):
         super(GroupSelectForm, self).__init__(*args, **kwargs)
         self.fields['groups'] = forms.ChoiceField(
-            choices=[('-', '-')] + [(item.user, item.user) for item in Group.objects.filter(owner=user)],
+            choices=[('-', '-')] + [(item.group_name, item.group_name) for item in Group.objects.filter(owner=user)],
         )
 
 
@@ -61,7 +61,7 @@ class FriendsForm(forms.Form):
     def __init__(self, user, friends=[], vals=[], *args, **kwargs):
         super(FriendsForm, self).__init__(*args, **kwargs)
         self.fields['friends'] = forms.MultipleChoiceField(
-            choice=[(item.user, item.user) for item in friends],
+            choices=[(item.user, item.user) for item in friends],
             widget=forms.CheckboxSelectMultiple(),
             initial=vals
         )
@@ -82,5 +82,5 @@ class PostForm(forms.Form):
         public = User.objects.filter(username='public').first()
         self.fields['groups'] = forms.ChoiceField(
             choices=[('-', '-')] + [(item.group_name, item.group_name)
-                                    for item in Group.objects.first(owner__in=[user, public])]
+                                    for item in Group.objects.filter(owner__in=[user, public])]
         )

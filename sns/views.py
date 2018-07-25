@@ -117,7 +117,7 @@ def groups(request):
         'create_form': create_form,
         'group': sel_group,
     }
-    return render(request, 'sns/groups.html')
+    return render(request, 'sns/groups.html', params)
 
 
 # フレンドの追加処理

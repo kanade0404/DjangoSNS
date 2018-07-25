@@ -1,0 +1,7 @@
+.idea/
+KanadeSns/__pycache__/
+db.sqlite3
+sns/__pycache__/
+sns/migrations/
+venv/
+

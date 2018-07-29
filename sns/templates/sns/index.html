@@ -14,26 +14,21 @@
     {% endif %}
 {% endblock %}
 {% block content %}
-    <form action="{% url 'index' %}" method="post">
+    <form action="{% url 'sns:index' %}" method="post">
     {% csrf_token %}
     <input type="hidden" name="mode" value="__search_form__">
     {{ search_form }}
     <button>Search</button>
     </form>
     <hr>
-    <form action="{% url 'index' %}" method="post">
+    <form action="{% url 'sns:index' %}" method="post">
     {% csrf_token %}
-    <input type="hidden" name="mode" value="__check_form__">
-    {{ check_form }}
+    <input type="hidden" name="mode" value="__post_form__">
+    {{ post_form }}
     <button>update</button>
     </form>
     {% for item in contents %}
         <hr>
-        <p class="message_public">
-        {% if item.group.group_name == 'public' %}
-        [public]
-        {% endif %}
-        </p>
         <p class="message_content">{{ item.content }}</p>
         <p class="message_date">{{ item.pub_date }}</p>
 

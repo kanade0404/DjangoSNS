@@ -4,4 +4,6 @@ db.sqlite3
 sns/__pycache__/
 sns/migrations/
 venv/
+accounts/__pycache__/
+accounts/migrations/
 

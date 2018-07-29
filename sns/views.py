@@ -2,7 +2,11 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.views import generic
+from django.core.exceptions import PermissionDenied
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
+from django.urls import reverse, reverse_lazy
 
 from .models import Message, Friend, Group, Good
 from .forms import GroupCheckForm, GroupSelectForm, SearchForm, FriendsForm, CreateGroupForm, PostForm
@@ -12,54 +16,57 @@ from django.contrib.auth.decorators import login_required
 
 
 # indexのビュー関数
-@login_required(login_url='/admin/login')
+@login_required
 def index(request):
-    # publicのユーザーを取得
-    (public_user, public_group) = get_public()
     if request.method == 'POST':
-        if request.POST['mode'] == '__check_form__':
-            # フォームの作成
-            search_form = SearchForm()
-            check_form = GroupCheckForm(request.user, request.POST)
-            # チェックされたグループ名をリストに入れる
-            glist = []
-            for item in request.POST.getlist('groups'):
-                glist.append(item)
-            # メッセージの取得
-            messages = get_your_group_message(request.user, glist, None)
-        # Groupsメニューを変更した時の処理
+        # 検索の場合
         if request.POST['mode'] == '__search_form__':
-            # フォームの用意
             search_form = SearchForm(request.POST)
-            check_form = GroupCheckForm(request.user)
-            # グループのリストを取得
-            gps = Group.objects.filter(owner=request.user)
-            glist = [public_group]
-            for item in gps:
-                glist.append(item)
-            # メッセージの取得
-            messages = get_your_group_message(request.user, glist, request.POST['search'])
+            tmp = request.POST['search']
+            messages = get_message(tmp)
+        # 投稿の場合
+        elif request.POST['mode'] == '__post_form':
+            search_form = SearchForm()
+            content = request.POST['content']
+            gr_name = request.POST['groups']
+            content = request.POST['content']
+            # グループの取得
+            group = Group.objects.filter(owner=request.user).filter(group_name=gr_name).first()
+            if group == None:
+                (pub_user, group) = get_public()
+            # メッセージを作成し設定して保存
+            msg = Message()
+            msg.owner = request.user
+            msg.group = group
+            msg.content = content
+            try:
+                msg.save()
+            except:
+                params = {
+                    'login_user': request.user,
+                    'contents': get_message(),
+                    'search_form': search_form,
+                    'post_form': PostForm(),
+                }
+
+        else:
+            search_form = SearchForm()
+            messages = get_message(None)
     else:
-        # フォームの用意
         search_form = SearchForm()
-        check_form = GroupCheckForm(request.user)
-        # グループのリストを取得
-        gps = Group.objects.filter(owner=request.user)
-        glist = [public_group]
-        for item in gps:
-            glist.append(item)
+        post_form = PostForm()
         # メッセージの取得
-        messages = get_your_group_message(request.user, glist, None)
+        messages = get_message(None)
     params = {
         'login_user': request.user,
         'contents': messages,
-        'check_form': check_form,
         'search_form': search_form,
+        'post_form': post_form,
     }
     return render(request, 'sns/index.html', params)
 
 
-@login_required(login_url='/admin/login')
+@login_required
 def groups(request):
     # 自分が登録したフレンドを取得
     friends = Friend.objects.filter()
@@ -121,7 +128,7 @@ def groups(request):
 
 
 # フレンドの追加処理
-@login_required(login_url='/admin/login/')
+@login_required
 def add(request):
     # 追加するユーザーを取得
     add_name = request.GET['name']
@@ -150,7 +157,7 @@ def add(request):
 
 
 # グループの作成処理
-@login_required(login_url='/admin/login')
+@login_required
 def create_group(request):
     # グループを作りユーザーとグループ名を設定して保存する
     gp = Group()
@@ -162,7 +169,7 @@ def create_group(request):
 
 
 # メッセージのポスト処理
-@login_required(login_url='/admin/login')
+@login_required
 def post(request):
     # POST送信の処理
     if request.method == 'POST':
@@ -193,7 +200,7 @@ def post(request):
 
 
 # 投稿をシェアする
-@login_required(login_url='/admin/login')
+@login_required
 def share(request, share_id):
     # シェアするメッセージの取得
     share = Message.objects.get(id=share_id)
@@ -230,7 +237,7 @@ def share(request, share_id):
 
 
 # いいねボタンの処理
-@login_required(login_url='/admin/login')
+@login_required
 def good(request, good_id):
     # いいねするメッセージを取得
     good_msg = Message.objects.get(id=good_id)
@@ -253,22 +260,11 @@ def good(request, good_id):
     return redirect(to='/sns')
 
 
-def get_your_group_message(owner, glist, find):
-    (public_user, public_group) = get_public()
-    groups = Group.objects.filter(Q(owner=owner)|Q(owner=public_user)).filter(group_name=glist)
-    me_friends = Friend.objects.filter(group__in=groups)
-    me_users = []
-    for f in me_friends:
-        me_users.append(f.user)
-    his_groups = Group.objects.filter(owner__in=me_users)
-    his_friends = Friend.objects.filter(user=owner).filter(group__in=his_groups)
-    me_groups = []
-    for hf in his_friends:
-        me_groups.append(hf.group)
+def get_message(find):
     if find == None:
-        messages = Message.objects.filter(Q(group__in=groups)|Q(group__in=me_groups))[:100]
+        messages = Message.objects.all()[:100]
     else:
-        messages = Message.objects.filter(Q(group__in=groups)|Q(group__in=me_groups)).filter(content__contains=find)[:100]
+        messages = Message.objects.filter(content__contains=find)[:100]
     return messages
 
 

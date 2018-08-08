@@ -84,6 +84,11 @@ header .site-name a {
     font-size: 1.4rem;
 }
 
+#nav{
+    background: turquoise;
+    height: 50px;
+}
+
 .content {
     padding: 0 8px;
 }
@@ -153,6 +158,10 @@ header .site-name a {
     margin-right: 24px;
 }
 
+
+.search_form{
+    display: inline-flex;
+}
 /**
  * Create, Update
  */

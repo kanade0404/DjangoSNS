@@ -51,6 +51,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# sessionエンジンの指定
+SESSION_ENGINE = 'django.contrib.sessions.backends.file'
+
 ROOT_URLCONF = 'KanadeSns.urls'
 
 TEMPLATES = [

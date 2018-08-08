@@ -33,7 +33,10 @@ class GoodForm(forms.ModelForm):
 
 # 検索フォーム
 class SearchForm(forms.Form):
-    search = forms.CharField(max_length=100)
+    search_message = forms.CharField(max_length=50, label='検索投稿', required=False)
+    search_user = forms.CharField(max_length=50, label='検索ユーザー', required=False)
+    search_from_date = forms.DateTimeField(label='投稿時間', widget=forms.DateInput(attrs={'type': 'date'}), required=False)
+    search_to_date = forms.DateTimeField(widget=forms.DateInput(attrs={'type': 'date'}), required=False)
 
 
 # グループのチェックボックスフォーム
@@ -75,12 +78,6 @@ class CreateGroupForm(forms.Form):
 # 投稿フォーム
 class PostForm(forms.Form):
     content = forms.CharField(max_length=200,
-                              widget=forms.Textarea)
+                              widget=forms.Textarea(attrs={'rows': 4, 'cols': 40}),
+                              )
 
-    def __init__(self, user, *args, **kwargs):
-        super(PostForm, self).__init__(*args, **kwargs)
-        public = User.objects.filter(username='public').first()
-        self.fields['groups'] = forms.ChoiceField(
-            choices=[('-', '-')] + [(item.group_name, item.group_name)
-                                    for item in Group.objects.filter(owner__in=[user, public])]
-        )

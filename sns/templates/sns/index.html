@@ -1,10 +1,6 @@
 {% extends 'sns/layout.html' %}
 {% block title %}Index{% endblock %}
 {% block header %}
-    <h1>Sns</h1>
-    <p class="caption">
-    ※グループのチェックをONにしてアップデートするとそのグループに登録されている利用者のメッセージだけが表示されます。
-    </p>
     {% if messages %}
         <ul class="messages">
         {% for message in messages %}
@@ -14,10 +10,17 @@
     {% endif %}
 {% endblock %}
 {% block content %}
-    <form action="{% url 'sns:index' %}" method="post">
+    <form action="{% url 'sns:index' %}" method="post" class="search_form">
     {% csrf_token %}
     <input type="hidden" name="mode" value="__search_form__">
-    {{ search_form }}
+        {{ search_form.search_message.label }}
+        {{ search_form.search_message }}
+        {{ search_form.search_user.label }}
+        {{ search_form.search_user }}
+        {{ search_form.search_from_date.label }}
+        {{ search_form.search_from_date }}
+        〜
+        {{ search_form.search_to_date }}
     <button>Search</button>
     </form>
     <hr>
@@ -25,10 +28,9 @@
     {% csrf_token %}
     <input type="hidden" name="mode" value="__post_form__">
     {{ post_form }}
-    <button>update</button>
+    <button>submit</button>
     </form>
     {% for item in contents %}
-        <hr>
         <p class="message_content">{{ item.content }}</p>
         <p class="message_date">{{ item.pub_date }}</p>
 

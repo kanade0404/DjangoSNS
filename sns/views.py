@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django_filters import filters, FilterSet
 from django.views import generic
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -13,17 +14,28 @@ from .forms import GroupCheckForm, GroupSelectForm, SearchForm, FriendsForm, Cre
 
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
+import operator
 
 
 # indexのビュー関数
 @login_required
 def index(request):
+    # POST送信の場合
     if request.method == 'POST':
         # 検索の場合
         if request.POST['mode'] == '__search_form__':
+            post_form = PostForm()
             search_form = SearchForm(request.POST)
-            tmp = request.POST['search']
-            messages = get_message(tmp)
+            search_message = request.POST['search_message']
+            search_user = request.POST['search_user']
+            search_from_date = request.POST['search_from_date']
+            search_to_date = request.POST['search_to_date']
+            messages = find_message(search_message, search_user, search_from_date, search_to_date)
+            # セッションに格納
+            request.session['search_message'] = search_message
+            request.session['search_user'] = search_user
+            request.session['search_from_date'] = search_from_date
+            request.session['search_to_date'] = search_to_date
         # 投稿の場合
         elif request.POST['mode'] == '__post_form':
             search_form = SearchForm()
@@ -51,12 +63,21 @@ def index(request):
 
         else:
             search_form = SearchForm()
-            messages = get_message(None)
+            messages = get_message()
+    # GET送信の場合
     else:
         search_form = SearchForm()
+        if 'search_message' in request.session:
+            search_form.search_message = request.session['search_message']
+        if 'search_user' in request.session:
+            search_form.search_user = request.session['search_user']
+        if 'search_from_date' in request.session:
+            search_form.search_from_date = request.session['search_from_date']
+        if 'search_to_date' in request.session:
+            search_form.search_to_date = request.session['search_to_date']
         post_form = PostForm()
         # メッセージの取得
-        messages = get_message(None)
+        messages = get_message()
     params = {
         'login_user': request.user,
         'contents': messages,
@@ -260,11 +281,23 @@ def good(request, good_id):
     return redirect(to='/sns')
 
 
-def get_message(find):
-    if find == None:
-        messages = Message.objects.all()[:100]
-    else:
-        messages = Message.objects.filter(content__contains=find)[:100]
+# 投稿を100件まで条件なしで取得
+def get_message():
+    messages = Message.objects.all()[:100]
+    return messages
+
+
+# 投稿を条件ありで取得（デフォルトは条件なしで100件まで取得）
+def find_message(message, user, from_date, to_date):
+    messages = Message.objects.all()
+    if not message == '':
+        messages = messages.filter(content__contains=message)
+    if not user == '':
+        messages = messages.filter(owner__username=user)
+    if not from_date == '':
+        messages = messages.filter(pub_date__gt=from_date)
+    if not to_date == '':
+        messages = messages.filter(pub_date__gte=to_date)
     return messages
 
 

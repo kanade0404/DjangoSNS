@@ -80,4 +80,5 @@ class PostForm(forms.Form):
     content = forms.CharField(max_length=200,
                               widget=forms.Textarea(attrs={'rows': 4, 'cols': 40}),
                               )
+    image = forms.ImageField()
 

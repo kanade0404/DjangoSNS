@@ -45,3 +45,7 @@ class Good(models.Model):
     def __str__(self):
         return 'good for {0}(by{1})'.format(self.message, self.owner)
 
+
+class Photo(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='photo_owner')
+    image = models.ImageField(upload_to='image')

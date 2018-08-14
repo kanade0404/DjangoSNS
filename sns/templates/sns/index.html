@@ -24,7 +24,7 @@
     <button>Search</button>
     </form>
     <hr>
-    <form action="{% url 'sns:index' %}" method="post">
+    <form action="{% url 'sns:index' %}" method="post" class="post_form" enctype="multipart/form-data">
     {% csrf_token %}
     <input type="hidden" name="mode" value="__post_form__">
     {{ post_form }}
@@ -33,6 +33,7 @@
     {% for item in contents %}
         <p class="message_content">{{ item.content }}</p>
         <p class="message_date">{{ item.pub_date }}</p>
+        <img src="{{ item.image.url }}">
 
     {% endfor %}
 {% endblock %}

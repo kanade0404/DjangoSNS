@@ -20,11 +20,11 @@ import operator
 # indexのビュー関数
 @login_required
 def index(request):
+    post_form = PostForm()
     # POST送信の場合
     if request.method == 'POST':
         # 検索の場合
         if request.POST['mode'] == '__search_form__':
-            post_form = PostForm()
             search_form = SearchForm(request.POST)
             search_message = request.POST['search_message']
             search_user = request.POST['search_user']
@@ -37,15 +37,11 @@ def index(request):
             request.session['search_from_date'] = search_from_date
             request.session['search_to_date'] = search_to_date
         # 投稿の場合
-        elif request.POST['mode'] == '__post_form':
+        elif request.POST['mode'] == '__post_form__':
             search_form = SearchForm()
             content = request.POST['content']
-            gr_name = request.POST['groups']
-            content = request.POST['content']
             # グループの取得
-            group = Group.objects.filter(owner=request.user).filter(group_name=gr_name).first()
-            if group == None:
-                (pub_user, group) = get_public()
+            (pub_user, group) = get_public()
             # メッセージを作成し設定して保存
             msg = Message()
             msg.owner = request.user
@@ -58,8 +54,10 @@ def index(request):
                     'login_user': request.user,
                     'contents': get_message(),
                     'search_form': search_form,
-                    'post_form': PostForm(),
+                    'post_form': post_form,
                 }
+            finally:
+                messages = get_message()
 
         else:
             search_form = SearchForm()
@@ -75,7 +73,6 @@ def index(request):
             search_form.search_from_date = request.session['search_from_date']
         if 'search_to_date' in request.session:
             search_form.search_to_date = request.session['search_to_date']
-        post_form = PostForm()
         # メッセージの取得
         messages = get_message()
     params = {
@@ -284,6 +281,7 @@ def good(request, good_id):
 # 投稿を100件まで条件なしで取得
 def get_message():
     messages = Message.objects.all()[:100]
+
     return messages
 
 

@@ -91,6 +91,7 @@ header .site-name a {
 
 .content {
     padding: 0 8px;
+    margin: 5px 0 0 0;
 }
 
 /**
@@ -127,6 +128,9 @@ header .site-name a {
 
 .pagination li:last-child {
     text-align: right;
+}
+.post_form label{
+    display: none;
 }
 
 /**

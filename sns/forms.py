@@ -1,5 +1,5 @@
 from django import forms
-from .models import Message, Group, Friend, Good
+from .models import Message, Group, Good
 from django.contrib.auth.models import User
 
 
@@ -7,28 +7,14 @@ from django.contrib.auth.models import User
 class MessageForm(forms.ModelForm):
     class Meta:
         model = Message
-        fields = ['owner', 'group', 'content']
+        fields = ['user', 'content']
 
 
 # グループフォーム
 class GroupForm(forms.ModelForm):
     class Meta:
         model = Group
-        fields = ['owner', 'group_name']
-
-
-# フレンドフォーム
-class FriendForm(forms.ModelForm):
-    class Meta:
-        model = Friend
-        fields = ['owner', 'user', 'group']
-
-
-# お気に入りフォーム
-class GoodForm(forms.ModelForm):
-    class Meta:
-        model = Good
-        fields = ['owner', 'message']
+        fields = ['user', 'group_name']
 
 
 # 検索フォーム
@@ -56,17 +42,6 @@ class GroupSelectForm(forms.Form):
         super(GroupSelectForm, self).__init__(*args, **kwargs)
         self.fields['groups'] = forms.ChoiceField(
             choices=[('-', '-')] + [(item.group_name, item.group_name) for item in Group.objects.filter(owner=user)],
-        )
-
-
-# フレンドのチェックボックスフォーム
-class FriendsForm(forms.Form):
-    def __init__(self, user, friends=[], vals=[], *args, **kwargs):
-        super(FriendsForm, self).__init__(*args, **kwargs)
-        self.fields['friends'] = forms.MultipleChoiceField(
-            choices=[(item.user, item.user) for item in friends],
-            widget=forms.CheckboxSelectMultiple(),
-            initial=vals
         )
 
 

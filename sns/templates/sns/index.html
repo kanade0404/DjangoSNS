@@ -33,7 +33,7 @@
     {% for item in contents %}
         <p class="message_content">{{ item.content }}</p>
         <p class="message_date">{{ item.pub_date }}</p>
-        <img src="{{ item.image.url }}">
+        <img src="{{ item.image }}">
 
     {% endfor %}
 {% endblock %}

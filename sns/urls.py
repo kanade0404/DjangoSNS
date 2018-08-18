@@ -1,14 +1,11 @@
-from django.urls import path, include
+from django.urls import include, path
 from . import views
 
 app_name = 'sns'
 
 urlpatterns = [
     path('', views.index, name='index'),
+    path('find_post/', views.add_post, name='find_post'),
+    path('add_post/', views.add_post, name='add_post'),
+    path('delete_post/', views.delete_post, name='delete_post'),
 ]
-
-from django.conf import settings
-from django.conf.urls.static import static
-
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -5,10 +5,12 @@ from django.contrib.auth.models import User
 class Message(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='message_user', default=1)
     content = models.TextField(max_length=200)
+    image = models.ImageField(upload_to='image/')
     share_id = models.IntegerField(default=-1)
     good_count = models.IntegerField(default=0)
     share_count = models.IntegerField(default=0)
     pub_date = models.DateTimeField(auto_now_add=True)
+    is_delete = models.BooleanField(default=False)
 
     def __str__(self):
         return '{0}({1})'.format(self.content, self.user)
@@ -34,11 +36,3 @@ class Good(models.Model):
 
     def __str__(self):
         return 'good for {0}(by{1})'.format(self.message, self.user)
-
-
-class Photo(models.Model):
-    message = models.ForeignKey(User, on_delete=models.CASCADE, related_name='photo_message', default=1)
-    image = models.ImageField(upload_to='image')
-
-    def __str__(self):
-        return 'message={0}image={1}'.format(self.message, self.image)

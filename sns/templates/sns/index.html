@@ -10,7 +10,7 @@
     {% endif %}
 {% endblock %}
 {% block content %}
-    <form action="{% url 'sns:index' %}" method="post" class="search_form">
+    <form action="{% url 'sns:find_post' %}" method="post" class="search_form">
     {% csrf_token %}
     <input type="hidden" name="mode" value="__search_form__">
         {{ search_form.search_message.label }}
@@ -24,7 +24,7 @@
     <button>Search</button>
     </form>
     <hr>
-    <form action="{% url 'sns:index' %}" method="post" class="post_form" enctype="multipart/form-data">
+    <form action="{% url 'sns:add_post' %}" method="post" class="post_form" enctype="multipart/form-data">
     {% csrf_token %}
     <input type="hidden" name="mode" value="__post_form__">
     {{ post_form }}
@@ -33,7 +33,14 @@
     {% for item in contents %}
         <p class="message_content">{{ item.content }}</p>
         <p class="message_date">{{ item.pub_date }}</p>
-        <img src="{{ item.image }}">
-
+        {% if item.image %}
+            <img src="{{ item.image.url }}">
+        {% endif %}
+        <form action="{% url 'sns:delete_post' %}" method="post" class="delete_post">
+            {% csrf_token %}
+            <input type="hidden" name="mode" value="__delete_post__">
+            <input type="hidden" name="id" value="{{ item.id }}">
+            <button type="submit">DELETE</button>
+        </form>
     {% endfor %}
 {% endblock %}

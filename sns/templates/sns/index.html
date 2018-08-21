@@ -3,44 +3,54 @@
 {% block header %}
     {% if messages %}
         <ul class="messages">
-        {% for message in messages %}
-            <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
-        {% endfor %}
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+            {% endfor %}
         </ul>
     {% endif %}
 {% endblock %}
 {% block content %}
-    <form action="{% url 'sns:find_post' %}" method="post" class="search_form">
-    {% csrf_token %}
-    <input type="hidden" name="mode" value="__search_form__">
-        {{ search_form.search_message.label }}
-        {{ search_form.search_message }}
-        {{ search_form.search_user.label }}
-        {{ search_form.search_user }}
-        {{ search_form.search_from_date.label }}
-        {{ search_form.search_from_date }}
-        〜
-        {{ search_form.search_to_date }}
-    <button>Search</button>
-    </form>
-    <hr>
-    <form action="{% url 'sns:add_post' %}" method="post" class="post_form" enctype="multipart/form-data">
-    {% csrf_token %}
-    <input type="hidden" name="mode" value="__post_form__">
-    {{ post_form }}
-    <button>submit</button>
-    </form>
-    {% for item in contents %}
-        <p class="message_content">{{ item.content }}</p>
-        <p class="message_date">{{ item.pub_date }}</p>
-        {% if item.image %}
-            <img src="{{ item.image.url }}">
-        {% endif %}
-        <form action="{% url 'sns:delete_post' %}" method="post" class="delete_post">
-            {% csrf_token %}
-            <input type="hidden" name="mode" value="__delete_post__">
-            <input type="hidden" name="id" value="{{ item.id }}">
-            <button type="submit">DELETE</button>
-        </form>
-    {% endfor %}
+    <div class="row">
+        <div class="col-md-3">
+
+        </div>
+        <div class="col-md-6">
+            <form action="{% url 'sns:add_post' %}" method="post" class="post_form" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="mode" value="__post_form__">
+                {{ post_form }}
+                <button>submit</button>
+            </form>
+            {% for item in contents %}
+                <div class="post_box">
+                    <p class="message_content">{{ item.content }}</p>
+                    {% if item.image %}
+                        <img src="{{ item.image.url }}">
+                    {% endif %}
+                    <p class="message_date">{{ item.pub_date }}</p>
+                    <form action="{% url 'sns:delete_post' %}" method="post" class="delete_post">
+                        {% csrf_token %}
+                        <input type="hidden" name="mode" value="__delete_post__">
+                        <input type="hidden" name="id" value="{{ item.id }}">
+                        <button type="submit">DELETE</button>
+                    </form>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="col-md-3">
+            <form action="{% url 'sns:find_post' %}" method="post" class="search_form">
+                {% csrf_token %}
+                <input type="hidden" name="mode" value="__search_form__">
+                {{ search_form.search_message.label }}
+                {{ search_form.search_message }}
+                {{ search_form.search_user.label }}
+                {{ search_form.search_user }}
+                {{ search_form.search_from_date.label }}
+                {{ search_form.search_from_date }}
+                〜
+                {{ search_form.search_to_date }}
+                <button>Search</button>
+            </form>
+        </div>
+    </div>
 {% endblock %}

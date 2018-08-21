@@ -112,6 +112,10 @@ header .site-name a {
     border-bottom: 1px dotted #cccccc;
 }
 
+.search_form{
+    display: inline-grid;
+}
+
 .post-list, .pagination {
 
 }
@@ -133,74 +137,15 @@ header .site-name a {
     display: none;
 }
 
-/**
- * detail
- */
-.post-text {
-    margin-bottom: 8px;
-    padding-bottom: 8px;
-    border-bottom: 1px dotted #cccccc;
-}
-
-.post-date {
-    margin-bottom: 8px;
-    padding-bottom: 8px;
-    border-bottom: 1px dotted #cccccc;
-}
-
-.post-date span {
-    padding: 0 16px;
-}
-
-.post-edit {
-    margin-bottom: 8px;
-    padding-bottom: 8px;
-    border-bottom: 1px dotted #cccccc;
-}
-
-.post-edit a:first-child {
-    margin-right: 24px;
-}
-
-
-.search_form{
-    display: inline-flex;
-}
-/**
- * Create, Update
- */
-.common-form label {
+.post_box{
+    padding: 0.2em 0.5em;
+    margin: 2em 0;
+    background: #d6ebff;
+    box-shadow: 0px 0px 0px 10px #d6ebff;
+    border: dashed 2px white;
     display: block;
 }
-
-.common-form p {
-    margin-bottom: 8px;
-}
-
-.common-form input, .common-form textarea {
-    padding: 4px;
-    width: 100%;
-    margin-bottom: 8px;
-}
-
-.common-form select {
-    padding: 4px;
-    margin-bottom: 8px;
-}
-
-.common-form .submit {
-    margin-top: 8px;
-    margin-bottom: 8px;
-    padding: 8px 36px;
-    border: none;
-    color: #ffffff;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    background-color: #4CAF50;
-    border-radius: 2px;
-}
-
-.common-form .delete {
-    background-color: #f44336;
+.post_box p {
+    margin: 0;
+    padding: 0;
 }

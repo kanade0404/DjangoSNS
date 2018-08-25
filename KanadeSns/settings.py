@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'sns',
     'accounts.apps.AccountsConfig',
-    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -81,10 +80,6 @@ WSGI_APPLICATION = 'KanadeSns.wsgi.application'
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    # }
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'seiya_db',
@@ -123,10 +118,8 @@ AUTHENTICATION_BACKENDS = [
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
 
 LANGUAGE_CODE = 'ja'
-# LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'Asia/Tokyo'
-# TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
@@ -135,6 +128,14 @@ USE_L10N = True
 USE_TZ = True
 
 AUTH_USER_MODEL = 'sns.User'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 1025
+EMAIL_HOST_USER = 'melty0404@gmail.com'
+EMAIL_HOST_PASSWORD = 'kanadeAlphabet44'
+EMAIL_USE_TLS = True
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/

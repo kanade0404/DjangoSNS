@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
 from django.contrib import messages
-from .models import Message, Group, Good, Post
+from .models import Message, Group, Good
 from .forms import GroupCheckForm, GroupSelectForm, SearchForm, CreateGroupForm, MessageForm
 from django.contrib.auth.decorators import login_required
 

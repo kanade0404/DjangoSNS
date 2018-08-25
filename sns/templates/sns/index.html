@@ -18,11 +18,13 @@
             <form action="{% url 'sns:add_post' %}" method="post" class="post_form" enctype="multipart/form-data">
                 {% csrf_token %}
                 <input type="hidden" name="mode" value="__post_form__">
-                {{ post_form }}
+                {{ message_form.content }}
+                {{ message_form.image }}
                 <button>submit</button>
             </form>
             {% for item in contents %}
                 <div class="post_box">
+                    <p>{{ item.user.username }}</p>
                     <p class="message_content">{{ item.content }}</p>
                     {% if item.image %}
                         <img src="{{ item.image.url }}">

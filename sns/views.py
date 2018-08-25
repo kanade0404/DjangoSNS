@@ -3,8 +3,8 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
 from django.contrib import messages
-from .models import Message, Group, Good
-from .forms import GroupCheckForm, GroupSelectForm, SearchForm, CreateGroupForm, PostForm
+from .models import Message, Group, Good, Post
+from .forms import GroupCheckForm, GroupSelectForm, SearchForm, CreateGroupForm, MessageForm
 from django.contrib.auth.decorators import login_required
 
 
@@ -33,20 +33,21 @@ def index(request):
         'login_user': request.user,
         'contents': messages,
         'search_form': search_form,
-        'post_form': PostForm(),
+        'message_form': MessageForm(),
     }
     return render(request, 'sns/index.html', params)
 
 
 # 投稿を取得
 def get_message():
-    messages = Message.objects.filter(is_delete=False)
+    # messages = Message.objects.filter(is_delete=False)
+    messages = Message.objects.filter(is_delete=False).select_related()
     return messages
 
 
 # 投稿を条件ありで取得（デフォルトは条件なしで取得）
 def find_message(message, user, from_date, to_date):
-    messages = Message.objects.filter(is_delete=False)
+    messages = Message.objects.filter(is_delete=False).select_related()
     if not message == '':
         messages = messages.filter(content__contains=message)
     if not user == '':
@@ -61,13 +62,13 @@ def find_message(message, user, from_date, to_date):
 # 投稿を追加する
 @login_required
 def add_post(request):
-    post_form = PostForm(request.POST, request.FILES)
-    if not post_form.is_valid():
+    message_form = MessageForm(request.POST, request.FILES)
+    if not message_form.is_valid():
         raise ValueError('invalid form')
     msg = Message()
     msg.user = request.user
     msg.content = request.POST['content']
-    msg.image = post_form.cleaned_data['image']
+    msg.image = message_form.cleaned_data['image']
     try:
         msg.save()
     except Exception as e:
@@ -76,7 +77,7 @@ def add_post(request):
             'login_user': request.user,
             'contents': get_message(),
             'search_form': SearchForm(),
-            'post_form': post_form,
+            'message_form': message_form,
         }
     finally:
         messages = get_message()
@@ -84,7 +85,7 @@ def add_post(request):
         'login_user': request.user,
         'contents': messages,
         'search_form': SearchForm(),
-        'post_form': PostForm(),
+        'message_form': MessageForm(),
     }
     return render(request, 'sns/index.html', params)
 
@@ -107,7 +108,7 @@ def find_post(request):
         'login_user': request.user,
         'contents': messages,
         'search_form': SearchForm(),
-        'post_form': PostForm(),
+        'message_form': MessageForm(),
     }
     return render(request, 'sns/index.html', params)
 
@@ -123,7 +124,7 @@ def delete_post(request):
         'login_user': request.user,
         'contents': messages,
         'search_form': SearchForm(),
-        'post_form': PostForm(),
+        'message_form': MessageForm(),
     }
     return render(request, 'sns/index.html', params)
 

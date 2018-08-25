@@ -37,8 +37,8 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(_('email_address'), unique=True)
-    username = models.CharField(_('username'), max_length=50)
     icon_image = models.ImageField(upload_to='icon/')
+    username = models.CharField(_('username'), max_length=50, blank=True)
 
     is_staff = models.BooleanField(
         _('staff status'),
@@ -46,8 +46,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         help_text=_(
             'Designates whether the user can log into this admin site.'),
     )
-    is_active = models.BooleanField(
+    is_delete = models.BooleanField(
         _('active'),
+        default=False,
         help_text=_(
             'Designates whether this user should be threaded as active.'
             'Unselect this instead of deleting accounts.'
@@ -68,15 +69,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     def email_user(self, subject, message, from_email=None, **kwargs):
         send_mail(subject, message, from_email, [self.email], **kwargs)
 
-    @property
-    def username(self):
-        return self.email
-
 
 class Message(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='message_user', default=1)
     content = models.TextField(max_length=200)
-    image = models.ImageField(upload_to='image/')
+    image = models.ImageField(upload_to='image/', blank=True)
     share_id = models.IntegerField(default=-1)
     good_count = models.IntegerField(default=0)
     share_count = models.IntegerField(default=0)
@@ -91,6 +88,11 @@ class Message(models.Model):
 
     class Meta:
         ordering = ('-pub_date',)
+
+
+class Post(Message):
+    message = Message
+    username = User.username
 
 
 class Group(models.Model):

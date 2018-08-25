@@ -115,6 +115,10 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+AUTHENTICATION_BACKENDS = [
+    'accounts.views.UserAuth'
+]
+
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
 

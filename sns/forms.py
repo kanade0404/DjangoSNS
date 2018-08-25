@@ -7,7 +7,12 @@ from django.contrib.auth.models import User
 class MessageForm(forms.ModelForm):
     class Meta:
         model = Message
-        fields = ['user', 'content']
+        fields = ['user', 'content', 'image']
+
+    def __init__(self, *args, **kwargs):
+        super(MessageForm, self).__init__(*args, **kwargs)
+        self.fields['content'].widget.attrs.update({'rows': 4, 'cols': 40})
+        self.fields['image'].required = False
 
 
 # グループフォーム
@@ -55,5 +60,5 @@ class PostForm(forms.Form):
     content = forms.CharField(max_length=200,
                               widget=forms.Textarea(attrs={'rows': 4, 'cols': 40}),
                               )
-    image = forms.ImageField()
+    image = forms.ImageField(required=False)
 

@@ -1,10 +1,6 @@
-import sys
 from django.shortcuts import render
-from django.shortcuts import redirect
-from django.contrib.auth.models import User
-from django.contrib import messages
-from .models import Message, Group, Good
-from .forms import GroupCheckForm, GroupSelectForm, SearchForm, CreateGroupForm, MessageForm
+from .models import Message
+from .forms import SearchForm, MessageForm
 from django.contrib.auth.decorators import login_required
 
 
@@ -30,7 +26,7 @@ def index(request):
         # メッセージの取得
         messages = get_message()
     params = {
-        'login_user': request.user,
+        'login_user': request.user.username,
         'contents': messages,
         'search_form': search_form,
         'message_form': MessageForm(),

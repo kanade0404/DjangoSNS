@@ -1,10 +1,6 @@
 from django.db import models
-from django.core.mail import send_mail
-# こっちでもいける？
-from django.core.mail import EmailMessage
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
-from KanadeSns import settings
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.base_user import BaseUserManager
@@ -67,13 +63,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     class Meta:
         verbose_name = _('user')
         verbose_name_plural = _('users')
-
-    def email_user(self, subject, message, from_email=settings.EMAIL_HOST_USER):
-        subject = '件名'
-        message = 'テストメールです。'
-        # send_mail(subject, message, from_email, [self.email], fail_silently=False)
-        email = EmailMessage(subject, message, to=[self.email])
-        email.send()
 
 
 class Message(models.Model):

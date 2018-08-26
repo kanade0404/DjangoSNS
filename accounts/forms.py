@@ -1,3 +1,4 @@
+from django import forms
 from django.contrib.auth.forms import (
     AuthenticationForm, UserCreationForm
 )
@@ -12,13 +13,12 @@ class LoginForm(AuthenticationForm):
             field.widget.attr['placeholder'] = field.label
 
 
-class UserCreationForm(UserCreationForm):
+class UserCreateForm(UserCreationForm):
+    icon_image = forms.ImageField(required=False)
+
     class Meta:
         model = User
-        if User.USERNAME_FIELD == 'email':
-            fields = ('email',)
-        else:
-            fields = ('username', 'email')
+        fields = ('email', 'username', 'icon_image')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

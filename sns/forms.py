@@ -1,5 +1,5 @@
 from django import forms
-from .models import Message, Group, Good
+from .models import Message, Group
 from django.contrib.auth.models import User
 
 

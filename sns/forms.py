@@ -1,18 +1,17 @@
 from django import forms
-from .models import Message, Group
-from django.contrib.auth.models import User
+from .models import Message, Group, User
 
 
 # メッセージフォーム
 class MessageForm(forms.ModelForm):
+    content = forms.CharField(max_length=200,
+                              widget=forms.Textarea(attrs={'rows': 4, 'cols': 40}),
+                              )
+    image = forms.ImageField(required=False)
+
     class Meta:
         model = Message
-        fields = ['user', 'content', 'image']
-
-    def __init__(self, *args, **kwargs):
-        super(MessageForm, self).__init__(*args, **kwargs)
-        self.fields['content'].widget.attrs.update({'rows': 4, 'cols': 40})
-        self.fields['image'].required = False
+        fields = ['content', 'image']
 
 
 # グループフォーム
@@ -55,10 +54,13 @@ class CreateGroupForm(forms.Form):
     group_name = forms.CharField(max_length=50)
 
 
-# 投稿フォーム
-class PostForm(forms.Form):
-    content = forms.CharField(max_length=200,
-                              widget=forms.Textarea(attrs={'rows': 4, 'cols': 40}),
-                              )
-    image = forms.ImageField(required=False)
+# ユーザー情報変更フォーム
+class UpdateUserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('email', 'username', 'icon_image')
 
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #     for field in self.fields.value():
+    #         field.widget.attrs['class'] = 'form-control'

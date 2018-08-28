@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}{{ login_user }}{% endblock %}
+{% block header %}{% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-md-3">
+        </div>
+        <div class="col-lg-6">
+            <form action="{% url 'sns:user_info' user.pk %}" method="post" enctype="multipart/form-data" class="form-control" style="display: grid;">
+                {% csrf_token %}
+                {% for field in form %}
+                    <label for="{{ field.id_for_label }}">{{ field.label_tag }}</label>
+                    {% if field == 'icon_image' %}
+                        {{ field.url }}
+                    {% else %}
+                        {{ field }}
+                    {% endif %}
+                    {{ field.error }}
+                {% endfor %}
+            <button type="submit" class="btn btn-primary btn-lg">変更を保存</button>
+            </form>
+        <a href="{% url 'sns:index' %}">戻る</a>
+        </div>
+        <div class="col-md-3">
+
+        </div>
+    </div>
+{% endblock %}

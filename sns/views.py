@@ -1,7 +1,9 @@
-from django.shortcuts import render
-from .models import Message
-from .forms import SearchForm, MessageForm
+from django.shortcuts import render, resolve_url, redirect
+from django.views import generic
+from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
+from .models import Message, User
+from .forms import SearchForm, MessageForm, UpdateUserForm
 
 
 # indexのビュー関数
@@ -135,3 +137,28 @@ def delete_search_condition_session(request):
         del request.session['search_from_date']
     if 'search_to_date' in request.session:
         del request.session['search_to_date']
+
+
+# ユーザー本人しか見れない
+# class OnlyYouMixin(UserPassesTestMixin, generic.TemplateView):
+#     raise_exception = True
+#
+#     def test_func(self):
+#         user = self.request.user
+#         return user.pk == self.kwargs['pk'] or user.is_superuser
+
+
+# ユーザー編集
+# @login_required
+class UpdateUserInfo(generic.UpdateView):
+    model = User
+    form_class = UpdateUserForm
+    template_name = 'sns/user/user_info.html'
+
+    def get_success_url(self):
+        return resolve_url('sns:user_info', pk=self.kwargs['pk'])
+
+    def form_valid(self, form):
+        user = form.save(commit=False)
+        user.save()
+        return redirect('sns:index')

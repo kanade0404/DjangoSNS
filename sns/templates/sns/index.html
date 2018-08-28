@@ -12,18 +12,20 @@
 {% block content %}
     <div class="row">
         <div class="col-md-3">
-
+            <a href="{% url 'sns:user_info' user.pk %}">ユーザー情報</a>
         </div>
         <div class="col-md-6">
             <form action="{% url 'sns:add_post' %}" method="post" class="post_form" enctype="multipart/form-data">
                 {% csrf_token %}
-                <input type="hidden" name="mode" value="__post_form__">
                 {{ message_form.content }}
                 {{ message_form.image }}
                 <button>submit</button>
             </form>
             {% for item in contents %}
                 <div class="post_box">
+                    {% if item.icon_image %}
+                        <img src="{{ item.icon_image.url }}">
+                    {% endif %}
                     <p>{{ item.user.username }}</p>
                     <p class="message_content">{{ item.content }}</p>
                     {% if item.image %}

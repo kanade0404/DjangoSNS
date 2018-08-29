@@ -8,15 +8,17 @@
         <div class="col-lg-6">
             <form action="{% url 'sns:user_info' user.pk %}" method="post" enctype="multipart/form-data" class="form-control" style="display: grid;">
                 {% csrf_token %}
-                {% for field in form %}
-                    <label for="{{ field.id_for_label }}">{{ field.label_tag }}</label>
-                    {% if field == 'icon_image' %}
-                        {{ field.url }}
-                    {% else %}
-                        {{ field }}
-                    {% endif %}
-                    {{ field.error }}
-                {% endfor %}
+                <label for="{{ form.email.id_for_label }}">{{ form.email.label_tag }}</label>
+                {{ form.email }}
+                {{ form.email.error }}
+                <label for="{{ form.username.id_for_label }}">{{ form.username.label_tag }}</label>
+                {{ form.username }}
+                {{ form.username.error }}
+                <label for="{{ form.icon_image.id_for_label }}">{{ form.icon_image.label_tag }}</label>
+                {% if user.icon_image %}
+                    <img src="{{ user.icon_image.url }}">
+                {% endif %}
+                {{ form.icon_image }}
             <button type="submit" class="btn btn-primary btn-lg">変更を保存</button>
             </form>
         <a href="{% url 'sns:index' %}">戻る</a>

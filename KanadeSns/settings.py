@@ -127,14 +127,8 @@ USE_L10N = True
 
 USE_TZ = True
 
+# デフォルトで使用するユーザーモデル
 AUTH_USER_MODEL = 'sns.User'
-
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 1025
-EMAIL_HOST_USER = 'melty0404@gmail.com'
-EMAIL_HOST_PASSWORD = 'kanadeAlphabet44'
-EMAIL_USE_TLS = True
 
 
 # Static files (CSS, JavaScript, Images)

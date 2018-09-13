@@ -60,7 +60,3 @@ class UpdateUserForm(forms.ModelForm):
         model = User
         fields = ('email', 'username', 'icon_image')
 
-    # def __init__(self, *args, **kwargs):
-    #     super().__init__(*args, **kwargs)
-    #     for field in self.fields.value():
-    #         field.widget.attrs['class'] = 'form-control'

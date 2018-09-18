@@ -1,15 +1,12 @@
-from rest_framework import generics
-from rest_framework.permissions import AllowAny
-
-from django.shortcuts import render, resolve_url, redirect
+from django.shortcuts import render, redirect
 from django.views import generic
-from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
 from .models import Message, User
 from .forms import SearchForm, MessageForm, UpdateUserForm
 
 
 # indexのビュー関数
+# 一覧表示
 @login_required
 def index(request):
     # POST送信の場合
@@ -41,7 +38,6 @@ def index(request):
 
 # 投稿を取得
 def get_message():
-    # messages = Message.objects.filter(is_delete=False)
     messages = Message.objects.filter(is_delete=False).select_related()
     return messages
 

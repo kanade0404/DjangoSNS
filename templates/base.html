@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <!-- Vuesax -->
+    <link href="https://cdn.jsdelivr.net/npm/vuesax/dist/vuesax.css" rel="stylesheet">
     <title>{% if request.path != '/' %}{% block title %}{% endblock %} | {% endif %}Blog App with Auth | Django2 Tutorial</title>
 </head>
 <body>
@@ -15,10 +17,20 @@
         <nav>
             <ul>
                 {% if user.is_authenticated %}
-                <li><a href="{% url 'logout' %}" class="logout">Logout</a></li>
+                <li><vs-button vs-color="primary" vs-type="filled">
+                    <a href="{% url 'logout' %}" class="logout">Logout</a>
+                </vs-button></li>
                 {% else %}
-                <li><a href="{% url 'accounts:signup' %}" class="signup">Sign up</a></li>
-                <li><a href="{% url 'login' %}" class="login">Login</a></li>
+                <li>
+                    <vs-button va-color="primary" vs-type="filled">
+                        <a href="{% url 'accounts:signup' %}" class="signup">Sign up</a>
+                    </vs-button>
+                </li>
+                <li>
+                    <vs-button vs-color="primary" vs-type="filled">
+                        <a href="{% url 'login' %}" class="login">Login</a>
+                    </vs-button>
+                </li>
                 {% endif %}
             </ul>
         </nav>
@@ -27,8 +39,11 @@
         {% block content %}{% endblock %}
     </div>
 </div>
-<script type=text/javascript src=/static/build/js/manifest.8ad97ff44980ae905d14.js></script>
-<script type=text/javascript src=/static/build/js/vendor.9426dc8224405b9763bf.js></script>
-<script type=text/javascript src=/static/build/js/app.9cec9dd834dc557d316d.js></script>
+<!-- Vue.js -->
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<!-- Axios -->
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vuesax/dist/vuesax.umd.js"></script>
+{% block js %}{% endblock %}
 </body>
 </html>

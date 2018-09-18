@@ -26,6 +26,18 @@ a{
     color: blue;
     text-decoration: none;
 }
+
+/*
+input file custom css
+*/
+.input_photo{
+    color:black;
+    backgroud-color:red;
+    padding:6px;
+    border-radius:12px
+}
+
+
 table{
     margin: 10px;
     font-size: 14pt;
@@ -89,15 +101,4 @@ table tr td{
     font-weight: normal;
     font-size: 12pt;
     color: #666;
-}
-.share_content{
-    border: solid 3px #ddf;
-    padding: 10px 20px;
-}
-.share_line{
-    border: 1px solid #e0e0ff;
-}
-.share_item_content{
-    margin: 0px 50px;
-    font-size: 12pt;
 }

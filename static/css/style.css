@@ -116,9 +116,6 @@ header .site-name a {
     display: inline-grid;
 }
 
-.post-list, .pagination {
-
-}
 
 .pagination ul {
     width: 100%;
@@ -133,9 +130,6 @@ header .site-name a {
 .pagination li:last-child {
     text-align: right;
 }
-.post_form label{
-    display: none;
-}
 
 .post_box{
     padding: 0.2em 0.5em;
@@ -148,4 +142,31 @@ header .site-name a {
 .post_box p {
     margin: 0;
     padding: 0;
+}
+
+/*
+input file style
+*/
+.post_form label{
+    cursor: pointer;
+    padding: 11px 30px;
+    display: inline-block;
+    background-color: #1f74ff;
+    color: #fff;
+    border-radius: 6px;
+}
+.input_image input{
+    display: none;
+}
+.user_info{
+    display: inline-flex;
+}
+.user_info img{
+    border-radius: 50%;
+    height: 80px;
+}
+.user_info p{
+    font-size: x-large;
+    padding: 15px;
+    margin: 0;
 }

@@ -17,16 +17,21 @@
         <div class="col-md-6">
             <form action="{% url 'sns:add_post' %}" method="post" class="post_form" enctype="multipart/form-data">
                 {% csrf_token %}
-                <textarea style="resize:none; width:300px; height:200px;"></textarea>
-                <vs-upload data=""></vs-upload>
+                <textarea style="resize:none; width:400px; height:200px;" name="content"></textarea>
+                <label for="file_image" class="input_image">
+                    SELECT IMAGE
+                    <input type="file" id="file_image" accept="image" name="image">
+                </label>
                 <vs-button vs-type="filled">Submit</vs-button>
             </form>
             {% for item in contents %}
                 <div class="post_box">
-                    {% if item.icon_image %}
-                        <img src="{{ item.icon_image.url }}">
+                <div class="user_info">
+                    {% if item.user.icon_image %}
+                        <img src="{{ item.user.icon_image.url }}">
                     {% endif %}
                     <p>{{ item.user.username }}</p>
+                </div>
                     <p class="message_content">{{ item.content }}</p>
                     {% if item.image %}
                         <img src="{{ item.image.url }}">
@@ -47,12 +52,13 @@
                 <input type="hidden" name="mode" value="__search_form__">
                 {{ search_form.search_message.label }}
                 {{ search_form.search_message }}
-                <vs-input vs-label="{{ search_form.search_user.label }}">{{ search_form.search_user }}</vs-input>
+                {{ search_form.search_user.label }}
+                {{ search_form.search_user }}
                 {{ search_form.search_from_date.label }}
                 <vs-input type="date">{{ search_form.search_from_date }}</vs-input>
                 〜
                 <vs-input type="date">{{ search_form.search_to_date }}</vs-input>
-                <vs-button vs-type="border" vs-icon="search"></vs-button>
+                <vs-button vs-type="filled">Search</vs-button>
             </form>
         </div>
     </div>

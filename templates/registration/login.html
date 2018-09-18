@@ -4,7 +4,7 @@
 
 {% block content %}
 <h1>Login</h1>
-<section class="common-form">
+<section class="common-form" id="login">
     {% if form.errors %}
     <p class="error-msg">Your username and password didn't match. Please try again.</p>
     {% endif %}
@@ -21,8 +21,15 @@
     <form method="post" action="{% url 'login' %}">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit" class="submit">Login</button>
+        <vs-button type="submit">Login</vs-button>
         <input type="hidden" name="next" value="{{ next }}"/>
     </form>
 </section>
+{% endblock %}
+{% block js %}
+<script>
+    new Vue({
+        el: '#login'
+    })
+</script>
 {% endblock %}

@@ -25,8 +25,10 @@ class GroupForm(forms.ModelForm):
 class SearchForm(forms.Form):
     search_message = forms.CharField(max_length=50, label='投稿', required=False)
     search_user = forms.CharField(max_length=50, label='ユーザー', required=False)
-    search_from_date = forms.DateTimeField(label='投稿時間', widget=forms.DateInput(attrs={'type': 'date'}), required=False)
-    search_to_date = forms.DateTimeField(widget=forms.DateInput(attrs={'type': 'date'}), required=False)
+    search_from_date = forms.DateTimeField(label='投稿時間', widget=forms.DateInput(attrs={'type': 'date'}),
+                                           required=False, input_formats=['%Y-%m-%d'])
+    search_to_date = forms.DateTimeField(widget=forms.DateInput(attrs={'type': 'date'}),
+                                         required=False, input_formats=['%Y-%m-%d'])
 
 
 # グループのチェックボックスフォーム

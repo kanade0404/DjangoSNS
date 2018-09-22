@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.views import generic
 from django.contrib.auth.decorators import login_required
 from .models import Message, User
 from .forms import SearchForm, MessageForm, UpdateUserForm
+import datetime
 
 
 # indexのビュー関数
@@ -71,7 +73,7 @@ def add_post(request):
     except Exception as e:
         print(e)
         params = {
-            'login_user': request.user,
+            'login_user': request.user.username,
             'contents': get_message(),
             'search_form': SearchForm(),
             'message_form': message_form,
@@ -79,12 +81,13 @@ def add_post(request):
     finally:
         messages = get_message()
     params = {
-        'login_user': request.user,
+        'login_user': request.user.username,
         'contents': messages,
         'search_form': SearchForm(),
         'message_form': MessageForm(),
     }
-    return render(request, 'sns/index.html', params)
+    # return render(request, 'sns/index.html', params)
+    return reverse('sns:index')
 
 
 # 投稿を検索する
@@ -99,15 +102,18 @@ def find_post(request):
     # セッションに格納
     request.session['search_message'] = search_message
     request.session['search_user'] = search_user
-    request.session['search_from_date'] = search_from_date
-    request.session['search_to_date'] = search_to_date
+    if not search_from_date == '':
+        request.session['search_from_date'] = datetime.datetime.strptime(search_from_date, '%Y/%m/%d %H:%M:%S')
+    if not search_to_date == '':
+        request.session['search_to_date'] = datetime.datetime.strptime(search_to_date, '%Y/%m/%d %H:%M:%S')
     params = {
-        'login_user': request.user,
+        'login_user': request.user.username,
         'contents': messages,
         'search_form': SearchForm(),
         'message_form': MessageForm(),
     }
-    return render(request, 'sns/index.html', params)
+    # return render(request, 'sns/index.html', params)
+    return reverse('sns:index')
 
 
 # 投稿を削除する
@@ -118,12 +124,13 @@ def delete_post(request):
     delete_message.save()
     messages = get_message()
     params = {
-        'login_user': request.user,
+        'login_user': request.user.username,
         'contents': messages,
         'search_form': SearchForm(),
         'message_form': MessageForm(),
     }
-    return render(request, 'sns/index.html', params)
+    # return render(request, 'sns/index.html', params)
+    return reverse('sns:index')
 
 
 # 検索情報のセッションを削除する

@@ -4,8 +4,11 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
     <!-- Vuesax -->
     <link href="https://cdn.jsdelivr.net/npm/vuesax/dist/vuesax.css" rel="stylesheet">
     <title>{% if request.path != '/' %}{% block title %}{% endblock %} | {% endif %}Blog App with Auth | Django2 Tutorial</title>
@@ -13,32 +16,48 @@
 <body>
 <div class="container">
     <header>
-        <p class="site-name"><a href="{% url 'sns:index' %}">Blog App</a></p>
-        <nav>
-            <ul>
+        <nav class="navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="{% url 'sns:index' %}">KanadeSnS</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
                 {% if user.is_authenticated %}
-                <li><vs-button vs-color="primary" vs-type="filled">
-                    <a href="{% url 'logout' %}" class="logout">Logout</a>
-                </vs-button></li>
+                    <li>
+                        <a href="{% url 'logout' %}" class="logout">Logout</a>
+                    </li>
                 {% else %}
-                <li>
-                    <vs-button va-color="primary" vs-type="filled">
+                    <li class="nav-item">
+                        <a href="{% url 'accounts:login' %}" class="login">Login</a>
+                    </li>
+                {% endif %}
+                {% if user %}
+                    <li>
                         <a href="{% url 'accounts:signup' %}" class="signup">Sign up</a>
-                    </vs-button>
-                </li>
-                <li>
-                    <vs-button vs-color="primary" vs-type="filled">
-                        <a href="{% url 'login' %}" class="login">Login</a>
-                    </vs-button>
-                </li>
+                    </li>
                 {% endif %}
             </ul>
+        </div>
         </nav>
     </header>
-    <div class="content">
-        {% block content %}{% endblock %}
+    <div class="container">
+        <div class="wrapper">
+            {% block content %}{% endblock %}
+        </div>
     </div>
 </div>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"
+        integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"
+        integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
+        crossorigin="anonymous"></script>
 <!-- Vue.js -->
 <script src="https://unpkg.com/vue/dist/vue.js"></script>
 <!-- Axios -->

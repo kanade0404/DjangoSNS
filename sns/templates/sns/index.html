@@ -55,9 +55,9 @@
                 {{ search_form.search_user.label }}
                 {{ search_form.search_user }}
                 {{ search_form.search_from_date.label }}
-                <vs-input type="date">{{ search_form.search_from_date }}</vs-input>
+                <vs-input type="date" name="search_from_date">{{ search_form.search_from_date }}</vs-input>
                 〜
-                <vs-input type="date">{{ search_form.search_to_date }}</vs-input>
+                <vs-input type="date" name="search_to_date">{{ search_form.search_to_date }}</vs-input>
                 <vs-button vs-type="filled">Search</vs-button>
             </form>
         </div>

@@ -1,6 +1,9 @@
-from .forms import UserCreateForm, LoginForm
+from .forms import UserCreateForm, LoginForm, UserPasswordResetForm, UserSetPasswordForm
 from django.contrib.sites.shortcuts import get_current_site
-from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.views import(
+    LoginView, LogoutView, PasswordResetView, PasswordResetDoneView,
+    PasswordResetConfirmView, PasswordResetCompleteView
+)
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import generic
 from sns.models import User
@@ -10,6 +13,7 @@ from django.template.loader import get_template
 from django.core.signing import BadSignature, SignatureExpired, loads, dumps
 from django.conf import settings
 from django.http import Http404, HttpResponseBadRequest
+from django.urls import reverse_lazy
 
 
 class UserAuth(ModelBackend, LoginView):
@@ -100,3 +104,37 @@ class UserCreateComplete(generic.TemplateView):
                     return super().get(request, **kwargs)
 
         return HttpResponseBadRequest()
+
+
+class ResetPassword(PasswordResetView):
+    """
+    パスワード変更用URLの送付ページ
+    """
+    subject_template_name = 'accounts/mail_template/reset_password/subject.txt'
+    email_template_name = 'accounts/mail_template/reset_password/message.txt'
+    form_class = UserPasswordResetForm
+    template_name = 'accounts/reset_password.html'
+    success_url = reverse_lazy('accounts:reset_password_done')
+
+
+class ResetPasswordDone(PasswordResetDoneView):
+    """
+    パスワード変更用URL送付表示ページ
+    """
+    template_name = 'accounts/reset_password_done.html'
+
+
+class ResetPasswordConfirm(PasswordResetConfirmView):
+    """
+    新パスワード入力ページ
+    """
+    form_class = UserSetPasswordForm
+    success_url = reverse_lazy('accounts:reset_password_complete')
+    template_name = 'accounts/reset_password_confirm.html'
+
+
+class ResetPasswordComplete(PasswordResetCompleteView):
+    """
+    新パスワード設定しました
+    """
+    template_name = 'accounts/reset_password_complete.html'

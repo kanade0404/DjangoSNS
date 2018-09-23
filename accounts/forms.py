@@ -40,7 +40,7 @@ class UserPasswordResetForm(PasswordResetForm):
     """
 
     def __init__(self, *args, **kwargs):
-        super().__init__(self, *args, **kwargs)
+        super().__init__(*args, **kwargs)
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'
             field.widget.attrs['placeholder'] = field.label
@@ -51,7 +51,7 @@ class UserSetPasswordForm(SetPasswordForm):
     パスワードを再設定するフォーム
     """
     def __init__(self, *args, **kwargs):
-        super().__init__(self, *args, **kwargs)
+        super().__init__(*args, **kwargs)
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'
             field.widget.attrs['placeholder'] = field.label

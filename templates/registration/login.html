@@ -29,8 +29,7 @@
             <input type="hidden" name="next" value="{{ next }}">
             {% csrf_token %}
         </form>
-        <div class="input-group">
-        </div>
+    <a href="{% url 'accounts:reset_password' %}" class="btn btn-lg btn-block btn-primary">パスワードを忘れた方</a>
     </section>
 {% endblock %}
 {% block js %}

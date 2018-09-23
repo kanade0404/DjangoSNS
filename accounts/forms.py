@@ -25,10 +25,6 @@ class UserCreateForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('email', 'username', 'icon_image')
-        # if User.USERNAME_FIELD == 'email':
-        #     fields = ('email',)
-        # else:
-        #     fields = ('username', 'email')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

@@ -1,15 +1,15 @@
+from .forms import UserCreateForm, LoginForm
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import generic
+from sns.models import User
 from django.shortcuts import redirect
 from django.contrib.auth.backends import ModelBackend
 from django.template.loader import get_template
 from django.core.signing import BadSignature, SignatureExpired, loads, dumps
 from django.conf import settings
 from django.http import Http404, HttpResponseBadRequest
-from sns.models import User
-from .forms import UserCreateForm, LoginForm
 
 
 class UserAuth(ModelBackend, LoginView):
@@ -61,7 +61,6 @@ class UserCreate(generic.CreateView):
         message_template = get_template('accounts/mail_template/signup/message.txt')
         message = message_template.render(context)
         user.email_user(subject, message)
-
         return redirect('accounts:signup_done')
 
 
@@ -99,4 +98,5 @@ class UserCreateComplete(generic.TemplateView):
                     user.is_active = True
                     user.save()
                     return super().get(request, **kwargs)
+
         return HttpResponseBadRequest()

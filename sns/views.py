@@ -78,16 +78,6 @@ def add_post(request):
             'search_form': SearchForm(),
             'message_form': message_form,
         }
-    # finally:
-    #     messages = get_message()
-    # params = {
-    #     'login_user': request.user.username,
-    #     'contents': messages,
-    #     'search_form': SearchForm(),
-    #     'message_form': MessageForm(),
-    # }
-    # return render(request, 'sns/index.html', params)
-    # return reverse('sns:index')
     return redirect('sns:index')
 
 

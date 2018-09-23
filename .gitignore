@@ -7,4 +7,4 @@ venv/
 accounts/__pycache__/
 accounts/migrations/
 media/
-config/
+configs/

@@ -31,6 +31,7 @@ def index(request):
         messages = get_message()
     params = {
         'login_user': request.user.username,
+        'user_info': request.user,
         'contents': messages,
         'search_form': search_form,
         'message_form': MessageForm(),
@@ -103,7 +104,6 @@ def find_post(request):
         'search_form': SearchForm(),
         'message_form': MessageForm(),
     }
-    # return render(request, 'sns/index.html', params)
     return redirect('sns:index')
 
 
@@ -120,7 +120,6 @@ def delete_post(request):
         'search_form': SearchForm(),
         'message_form': MessageForm(),
     }
-    # return render(request, 'sns/index.html', params)
     return redirect('sns:index')
 
 

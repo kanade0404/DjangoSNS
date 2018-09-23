@@ -163,21 +163,6 @@ header .site-name a {
     display: inline-grid;
 }
 
-
-.pagination ul {
-    width: 100%;
-    display: table;
-}
-
-.pagination li {
-    display: table-cell;
-    width: 50%;
-}
-
-.pagination li:last-child {
-    text-align: right;
-}
-
 .post_box{
     padding: 0.2em 0.5em;
     margin: 2em 0;
@@ -216,4 +201,34 @@ input file style
     font-size: x-large;
     padding: 15px;
     margin: 0;
+}
+.left-dashboard{
+    padding: 40px 40px 40px 40px;
+}
+/*
+indexのユーザー情報
+*/
+.user_icon a > img{
+    border-radius: 50%;
+    height: 80px;
+    width: 80px;
+    border: 2px solid #fff;
+    box-sizing: border-box;
+    color: #fff;
+}
+.user_name{
+    position: absolute;
+    top: 100px;
+    left: 150px;
+}
+.user_name a{
+    color: #555555;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.right-dashboard{
+    position: relative;
+    top: 20px;
+    left: 55px;
 }

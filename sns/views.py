@@ -78,16 +78,17 @@ def add_post(request):
             'search_form': SearchForm(),
             'message_form': message_form,
         }
-    finally:
-        messages = get_message()
-    params = {
-        'login_user': request.user.username,
-        'contents': messages,
-        'search_form': SearchForm(),
-        'message_form': MessageForm(),
-    }
+    # finally:
+    #     messages = get_message()
+    # params = {
+    #     'login_user': request.user.username,
+    #     'contents': messages,
+    #     'search_form': SearchForm(),
+    #     'message_form': MessageForm(),
+    # }
     # return render(request, 'sns/index.html', params)
-    return reverse('sns:index')
+    # return reverse('sns:index')
+    return redirect('sns:index')
 
 
 # 投稿を検索する
@@ -113,7 +114,7 @@ def find_post(request):
         'message_form': MessageForm(),
     }
     # return render(request, 'sns/index.html', params)
-    return reverse('sns:index')
+    return redirect('sns:index')
 
 
 # 投稿を削除する
@@ -130,7 +131,7 @@ def delete_post(request):
         'message_form': MessageForm(),
     }
     # return render(request, 'sns/index.html', params)
-    return reverse('sns:index')
+    return redirect('sns:index')
 
 
 # 検索情報のセッションを削除する

@@ -1,11 +1,14 @@
 from django import forms
 from django.contrib.auth.forms import (
-    AuthenticationForm, UserCreationForm
+    AuthenticationForm, UserCreationForm, PasswordResetForm, SetPasswordForm
 )
 from sns.models import User
 
 
 class LoginForm(AuthenticationForm):
+    """
+    ログインフォーム
+    """
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
@@ -14,13 +17,45 @@ class LoginForm(AuthenticationForm):
 
 
 class UserCreateForm(UserCreationForm):
+    """
+    ユーザー登録フォーム
+    """
     icon_image = forms.ImageField(required=False)
 
     class Meta:
         model = User
         fields = ('email', 'username', 'icon_image')
+        # if User.USERNAME_FIELD == 'email':
+        #     fields = ('email',)
+        # else:
+        #     fields = ('username', 'email')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'
+            field.widget.attrs['placeholder'] = field.label
+
+
+class UserPasswordResetForm(PasswordResetForm):
+    """
+    パスワードを忘れた際のフォーム
+    メールアドレスを入力して再設定画面に飛ぶ
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(self, *args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'form-control'
+            field.widget.attrs['placeholder'] = field.label
+
+
+class UserSetPasswordForm(SetPasswordForm):
+    """
+    パスワードを再設定するフォーム
+    """
+    def __init__(self, *args, **kwargs):
+        super().__init__(self, *args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'form-control'
+            field.widget.attrs['placeholder'] = field.label

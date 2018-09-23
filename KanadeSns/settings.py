@@ -144,3 +144,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 LOGIN_URL = 'accounts:login'
 LOGIN_REDIRECT_URL = 'sns:index'
 LOGOUT_REDIRECT_URL = '/'
+
+# メール送信設定
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'melty0404@gmail.com'
+EMAIL_HOST_PASSWORD = 'buevdefeqhehqxwk'

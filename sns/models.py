@@ -4,6 +4,8 @@ from django.utils import timezone
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.base_user import BaseUserManager
+from django.core.mail import send_mail
+from KanadeSns import settings
 
 
 class UserManager(BaseUserManager):
@@ -44,9 +46,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         help_text=_(
             'Designates whether the user can log into this admin site.'),
     )
-    is_delete = models.BooleanField(
+    is_active = models.BooleanField(
         _('active'),
-        default=False,
+        default=True,
         help_text=_(
             'Designates whether this user should be threaded as active.'
             'Unselect this instead of deleting accounts.'
@@ -63,6 +65,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     class Meta:
         verbose_name = _('user')
         verbose_name_plural = _('users')
+
+    def email_user(self, subject, message, from_email=settings.EMAIL_HOST_USER, **kwargs):
+        send_mail(subject, message, from_email, [self.email], **kwargs)
 
 
 class Message(models.Model):

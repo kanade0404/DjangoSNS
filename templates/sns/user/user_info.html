@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'sns/layout.html' %}
 {% block title %}{{ login_user }}{% endblock %}
 {% block header %}{% endblock %}
 {% block content %}
@@ -19,7 +19,7 @@
                     <img src="{{ user.icon_image.url }}">
                 {% endif %}
                 {{ form.icon_image }}
-            <button type="submit" class="btn btn-primary btn-lg">変更を保存</button>
+                <button type="submit" class="btn btn-primary btn-lg">変更を保存</button>
             </form>
         <a href="{% url 'sns:index' %}">戻る</a>
         </div>

@@ -41,14 +41,14 @@
             </form>
             {% for item in contents %}
                 <div class="post_box">
-                <div class="user_info">
-                    {% if item.user.icon_image %}
-                        <img src="{{ item.user.icon_image.url }}">
-                    {% else %}
-                        <img src="media/icon/default/default_user_icon.png" alt>
-                    {% endif %}
-                    <p>{{ item.user.username }}</p>
-                </div>
+                    <div class="user_info">
+                        {% if item.user.icon_image %}
+                            <img src="{{ item.user.icon_image.url }}">
+                        {% else %}
+                            <img src="media/icon/default/default_user_icon.png" alt>
+                        {% endif %}
+                        <p>{{ item.user.username }}</p>
+                    </div>
                     <p class="message_content">{{ item.content }}</p>
                     {% if item.image %}
                         <img src="{{ item.image.url }}">

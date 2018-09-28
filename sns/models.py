@@ -9,6 +9,9 @@ from KanadeSns import settings
 
 
 class UserManager(BaseUserManager):
+    """
+    ユーザー管理モデル
+    """
     user_in_migrations = True
 
     def _create_user(self, email, password, **extra_fields):
@@ -36,16 +39,23 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
+    """
+    ユーザーモデル
+    """
+    # メールアドレス
     email = models.EmailField(_('email'), unique=True)
+    # ユーザーアイコン画像
     icon_image = models.ImageField(upload_to='icon/', blank=True)
+    # ユーザー名
     username = models.CharField(_('username'), max_length=50)
-
+    # 管理者フラグ
     is_staff = models.BooleanField(
         _('staff status'),
         default=False,
         help_text=_(
             'Designates whether the user can log into this admin site.'),
     )
+    # アクティブフラグ（論理削除）
     is_active = models.BooleanField(
         _('active'),
         default=True,
@@ -54,6 +64,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             'Unselect this instead of deleting accounts.'
         ),
     )
+    # 登録日時（YYYY-MM-DD hh:mm:ss）
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
 
     objects = UserManager()
@@ -66,18 +77,33 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name = _('user')
         verbose_name_plural = _('users')
 
+    def __repr__(self):
+        return '{}: {}'.format(self.pk, self.username)
+
+    # メール送信
     def email_user(self, subject, message, from_email=settings.EMAIL_HOST_USER, **kwargs):
         send_mail(subject, message, from_email, [self.email], **kwargs)
 
 
 class Message(models.Model):
+    """
+    メッセージモデル
+    """
+    # ユーザーモデル
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='message_user', default=1)
+    # メッセージ内容
     content = models.TextField(max_length=200)
+    # 投稿画像
     image = models.ImageField(upload_to='image/', blank=True)
+    # シェアのID
     share_id = models.IntegerField(default=-1)
+    # 被お気に入り数
     good_count = models.IntegerField(default=0)
+    # 被シェア数
     share_count = models.IntegerField(default=0)
+    # 投稿時間
     pub_date = models.DateTimeField(auto_now_add=True)
+    # 投稿削除（論理削除）
     is_delete = models.BooleanField(default=False)
 
     def __str__(self):
@@ -91,7 +117,12 @@ class Message(models.Model):
 
 
 class Group(models.Model):
+    """
+    グループモデル
+    """
+    # ユーザーモデル
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='group_user', default=1)
+    # グループ名
     group_name = models.CharField(max_length=100)
 
     def __str__(self):
@@ -99,7 +130,12 @@ class Group(models.Model):
 
 
 class Good(models.Model):
+    """
+    お気に入りモデル
+    """
+    # ユーザーモデル
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='good_user', default=1)
+    # メッセージモデル
     message = models.ForeignKey(Message, on_delete=models.CASCADE)
 
     def __str__(self):

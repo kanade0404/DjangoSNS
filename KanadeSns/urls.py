@@ -15,12 +15,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic import TemplateView
 from django.conf import settings
 from django.conf.urls.static import static
+from sns.views import index
+from sns.urls import router
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('sns.urls')),
+    path('kanadesns/', include('sns.urls')),
+    # path('api/', include('sns.urls')),
+    # path('', index, name='index'),
+    path('', TemplateView.as_view(template_engine='index.html')),
     path('accounts/', include('accounts.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
 ] + static(settings.STATIC_URL)

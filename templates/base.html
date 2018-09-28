@@ -8,7 +8,8 @@
     <!-- Bootstrap CSS -->
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <link href=/static/build/css/app.0b939ff3d6d1df80be59bac7b18b4012.css rel=stylesheet>
     <!-- Vuesax -->
     <link href="https://cdn.jsdelivr.net/npm/vuesax/dist/vuesax.css" rel="stylesheet">
     <title>{% if request.path != '/' %}{% block title %}{% endblock %} | {% endif %}KanadeSns</title>
@@ -41,11 +42,7 @@
         </div>
         </nav>
     </header>
-    <div class="container">
-        <div class="wrapper">
-            {% block content %}{% endblock %}
-        </div>
-    </div>
+    {% block content %}{% endblock %}
 </div>
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -63,6 +60,9 @@
 <!-- Axios -->
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vuesax/dist/vuesax.umd.js"></script>
+<script type=text/javascript src=/static/build/js/manifest.96c9fb44f1f6dbbaf4c7.js></script>
+<script type=text/javascript src=/static/build/js/vendor.1a2ab8dd13868df3b792.js></script>
+<script type=text/javascript src=/static/build/js/app.c0e7470afc206b45afec.js></script>
 {% block js %}{% endblock %}
 </body>
 </html>

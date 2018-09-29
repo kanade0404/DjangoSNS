@@ -1,105 +1,58 @@
 from django.shortcuts import render, redirect
-from django.views import generic
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, JsonResponse
-from rest_framework import generics, status, mixins, viewsets, permissions, renderers
-from rest_framework.decorators import api_view, detail_route
-from rest_framework.response import Response
-from rest_framework.reverse import reverse
 from .models import Message, User
-from .forms import SearchForm, MessageForm, UpdateUserForm
-from .serializers import UserSerializer, MessageSerializer
-from .permissions import IsOwnerOrReadOnly
+from .forms import SearchForm, MessageForm
 import datetime
 
 
-class UserViewSet(viewsets.ModelViewSet):
-    """
-    ユーザービュー
-    """
-    serializer_class = UserSerializer
-    queryset = User.objects.filter(is_active=True)
-    parser_classes = (permissions.IsAuthenticatedOrReadOnly,
-                      IsOwnerOrReadOnly,)
-
-
-class MessageViewSet(viewsets.ModelViewSet):
-    """
-    メッセージビュー
-    """
-    serializer_class = MessageSerializer
-    queryset = Message.objects.filter(is_delete=False)
-    filter_fields = ('user', 'is_delete')
-    parser_classes = (permissions.IsAuthenticatedOrReadOnly,
-                      IsOwnerOrReadOnly,)
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
-
-    def perform_destroy(self, instance):
-        instance.is_delete = True
-        instance.save()
-        serializer = MessageSerializer(instance.data)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-@api_view(['GET'])
-def api_root(request, format=None):
-    return Response({
-        'users': reverse('user-list', request=request, format=format),
-        'messages': reverse('message-list', request=request, format=format)
-    })
-
-# indexのビュー関数
 # 一覧表示
-# @login_required
-# def index(request):
-#     if request.method == 'GET':
-#         messages = get_message()
-#         serializer = MessageSerializer(messages, many=True)
-#         return JsonResponse(serializer.data, safe=False)
-#     elif request.method == 'POST':
-#         data = JSONParser.parse(request)
-#         serializer = MessageSerializer(data=data)
-#         if serializer.is_valid():
-#             try:
-#                 serializer.save()
-#             except:
-#                 return HttpResponse(status=404)
-#             return JsonResponse(serializer.data, status=201)
-#         return JsonResponse(serializer.errors, status=400)
+@login_required
+def index(request):
+    # GET送信の場合
+    if request.method == 'GET':
+        search_form = SearchForm()
+        if 'search_message' in request.session:
+            search_form.search_message = request.session['search_message']
+        if 'search_user' in request.session:
+            search_form.search_user = request.session['search_user']
+        if 'search_from_date' in request.session:
+            search_form.search_from_date = request.session['search_from_date']
+        if 'search_to_date' in request.session:
+            search_form.search_to_date = request.session['search_to_date']
+        # メッセージの取得
+        messages = get_message()
+        params = {
+            'login_user': request.user.username,
+            'user_info': request.user,
+            'contents': messages,
+            'search_form': search_form,
+            'message_form': MessageForm(),
+        }
+        return render(request, 'sns/index.html', params)
     # POST送信の場合
-    # if request.method == 'POST':
-    #     delete_search_condition_session(request)
-    #     search_form = SearchForm()
-    #     messages = get_message()
-    # # GET送信の場合
-    # else:
-    #     search_form = SearchForm()
-    #     if 'search_message' in request.session:
-    #         search_form.search_message = request.session['search_message']
-    #     if 'search_user' in request.session:
-    #         search_form.search_user = request.session['search_user']
-    #     if 'search_from_date' in request.session:
-    #         search_form.search_from_date = request.session['search_from_date']
-    #     if 'search_to_date' in request.session:
-    #         search_form.search_to_date = request.session['search_to_date']
-    #     # メッセージの取得
-    #     messages = get_message()
-    # params = {
-    #     'login_user': request.user.username,
-    #     'user_info': request.user,
-    #     'contents': messages,
-    #     'search_form': search_form,
-    #     'message_form': MessageForm(),
-    # }
-    # return render(request, 'sns/index.html', params)
-    # return render(request, 'sns/index.html', params)
+    elif request.method == 'POST':
+        delete_search_condition_session(request)
+        search_form = SearchForm()
+        messages = get_message()
+        params = {
+            'login_user': request.user.username,
+            'user_info': request.user,
+            'contents': messages,
+            'search_form': search_form,
+            'message_form': MessageForm(),
+        }
+        return render(request, 'sns/index.html', params)
 
 
-# 投稿を取得
+# 投稿を全件取得
 def get_message():
     messages = Message.objects.filter(is_delete=False).select_related()
+    return messages
+
+
+# 投稿検索
+def get_fast_message(request):
+    messages = Message.objects.filter(is_delete=False).filter(content__contains=request['message'])
     return messages
 
 
@@ -131,12 +84,6 @@ def add_post(request):
         msg.save()
     except Exception as e:
         print(e)
-        params = {
-            'login_user': request.user.username,
-            'contents': get_message(),
-            'search_form': SearchForm(),
-            'message_form': message_form,
-        }
     return redirect('sns:index')
 
 
@@ -148,7 +95,7 @@ def find_post(request):
     search_user = request.POST['search_user']
     search_from_date = request.POST['search_from_date']
     search_to_date = request.POST['search_to_date']
-    messages = find_message(search_message, search_user, search_from_date, search_to_date)
+    messages = find_message(search_message)
     # セッションに格納
     request.session['search_message'] = search_message
     request.session['search_user'] = search_user
@@ -156,12 +103,6 @@ def find_post(request):
         request.session['search_from_date'] = datetime.datetime.strptime(search_from_date, '%Y/%m/%d %H:%M:%S')
     if not search_to_date == '':
         request.session['search_to_date'] = datetime.datetime.strptime(search_to_date, '%Y/%m/%d %H:%M:%S')
-    params = {
-        'login_user': request.user.username,
-        'contents': messages,
-        'search_form': SearchForm(),
-        'message_form': MessageForm(),
-    }
     return redirect('sns:index')
 
 
@@ -171,13 +112,6 @@ def delete_post(request):
     delete_message = Message.objects.filter(id=request.POST['id']).first()
     delete_message.is_delete = True
     delete_message.save()
-    messages = get_message()
-    params = {
-        'login_user': request.user.username,
-        'contents': messages,
-        'search_form': SearchForm(),
-        'message_form': MessageForm(),
-    }
     return redirect('sns:index')
 
 
@@ -193,14 +127,31 @@ def delete_search_condition_session(request):
         del request.session['search_to_date']
 
 
-# ユーザー編集
-# @login_required
-class UpdateUserInfo(generic.UpdateView):
-    model = User
-    form_class = UpdateUserForm
-    template_name = 'sns/user/user_info.html'
+# ユーザー情報表示
+@login_required
+def user_detail(request):
+    # GETならユーザー情報取得
+    if request.method == 'GET':
+        try:
+            user = get_user(request.user.id)
+        except User.DoesNotExist:
+            pass
+        except User.MultipleObjectsReturned:
+            pass
+    # POSTならユーザー情報更新
+    elif request.method == 'POST':
+        try:
+            request.user.save()
+        except:
+            return None
+    params = {
+        'login_user': request.user.username,
+        'user_info': get_user(request.user.id),
+    }
+    return render(request, 'sns/user/user_info.html', params)
 
-    def form_valid(self, form):
-        user = form.save(commit=False)
-        user.save()
-        return redirect('sns:index')
+
+# ユーザー情報取得
+def get_user(user_id):
+    user = User.objects.filter(is_active=True).get(pk=user_id)
+    return user

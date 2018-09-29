@@ -64,7 +64,7 @@
             {% endfor %}
         </div>
         <div class="col-md-4 right-dashboard">
-            <form action="{% url 'sns:find_post' %}" method="post" class="search_form">
+            <form action="{% url 'sns:find_post' user.pk %}" method="post" class="search_form">
                 {% csrf_token %}
                 <input type="hidden" name="mode" value="__search_form__">
                 {{ search_form.search_message.label }}

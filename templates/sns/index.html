@@ -1,6 +1,7 @@
 {% extends 'sns/layout.html' %}
 {% block title %}Index{% endblock %}
 {% block header %}
+    <link rel="stylesheet" type="text/css" href="/static/css/index.css">
     {% if messages %}
         <ul class="messages">
             {% for message in messages %}
@@ -28,8 +29,14 @@
                     <a href="{% url 'sns:user_info' user.pk %}">{{ user.username }}</a>
                 </div>
             </div>
+            <form action="{% url 'sns:index' %}" method="get" class="search_form">
+                {% csrf_token %}
+                {{ search_form.search_message.label }}
+                {{ search_form.search_message }}
+                <button type="submit" class="btn btn-lg btn-block btn-primary">Search</button>
+            </form>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-8">
             <form action="{% url 'sns:add_post' %}" method="post" class="post_form" enctype="multipart/form-data">
                 {% csrf_token %}
                 <textarea style="resize:none; width:400px; height:200px;" name="content"></textarea>
@@ -37,7 +44,7 @@
                     SELECT IMAGE
                     <input type="file" id="file_image" accept="image" name="image">
                 </label>
-                <vs-button vs-type="filled">Submit</vs-button>
+                <button type="submit" class="btn btn-lg btn-block btn-primary">Submit</button>
             </form>
             {% for item in contents %}
                 <div class="post_box">
@@ -58,26 +65,19 @@
                         {% csrf_token %}
                         <input type="hidden" name="mode" value="__delete_post__">
                         <input type="hidden" name="id" value="{{ item.id }}">
-                        <vs-button vs-type="filled">DELETE</vs-button>
+                        <button type="submit" class="btn btn-lg btn-block btn-primary">Submit</button>
                     </form>
                 </div>
             {% endfor %}
         </div>
-        <div class="col-md-4 right-dashboard">
-            <form action="{% url 'sns:find_post' user.pk %}" method="post" class="search_form">
-                {% csrf_token %}
-                <input type="hidden" name="mode" value="__search_form__">
-                {{ search_form.search_message.label }}
-                {{ search_form.search_message }}
-                {{ search_form.search_user.label }}
-                {{ search_form.search_user }}
-                {{ search_form.search_from_date.label }}
-                <vs-input type="date" name="search_from_date">{{ search_form.search_from_date }}</vs-input>
-                〜
-                <vs-input type="date" name="search_to_date">{{ search_form.search_to_date }}</vs-input>
-                <vs-button vs-type="filled">Search</vs-button>
-            </form>
-        </div>
+{#        <div class="col-md-4 right-dashboard">#}
+{#            <form action="{% url 'sns:index' %}" method="get" class="search_form">#}
+{#                {% csrf_token %}#}
+{#                {{ search_form.search_message.label }}#}
+{#                {{ search_form.search_message }}#}
+{#                <button type="submit" class="btn btn-lg btn-block btn-primary">Search</button>#}
+{#            </form>#}
+{#        </div>#}
     </div>
 {% endblock %}
 {% block js %}

@@ -1,30 +1,46 @@
 {% extends 'sns/layout.html' %}
-{% block title %}{{ login_user }}{% endblock %}
-{% block header %}{% endblock %}
+{% block title %}ユーザー情報 | {{ login_user }}{% endblock %}
+{% block header %}
+    <link rel="stylesheet" type="text/css" href="/static/css/user_info.css">
+    <script src="http://code.jquery.com/jquery-3.2.1.min.js"></script>
+{% endblock %}
 {% block content %}
     <div class="row">
-        <div class="col-md-3">
-        </div>
-        <div class="col-lg-6">
-            <form action="{% url 'sns:user_info' user.pk %}" method="post" enctype="multipart/form-data" class="form-control" style="display: grid;">
-                {% csrf_token %}
-                <label for="{{ form.email.id_for_label }}">{{ form.email.label_tag }}</label>
-                {{ form.email }}
-                {{ form.email.error }}
-                <label for="{{ form.username.id_for_label }}">{{ form.username.label_tag }}</label>
-                {{ form.username }}
-                {{ form.username.error }}
-                <label for="{{ form.icon_image.id_for_label }}">{{ form.icon_image.label_tag }}</label>
+        <div class="col-md-4"></div>
+        <div class="col-lg-8">
+            <div class="user_detail" id="user_detail">
                 {% if user.icon_image %}
                     <img src="{{ user.icon_image.url }}">
                 {% endif %}
-                {{ form.icon_image }}
-                <button type="submit" class="btn btn-primary btn-lg">変更を保存</button>
-            </form>
+                <p class="username">ユーザー {{ user_info.username }}</p>
+                <p class="email">メール {{ user_info.email }}</p>
+                <button class="btn btn-lg btn-block btn-primary" onclick="changeDisplay('user_detail_form', 'user_detail')">変更する</button>
+            </div>
+            <div class="user_detail_form" id="user_detail_form" style="display: none;">
+                <form action="{% url 'sns:user_info' user.pk %}" method="post" enctype="multipart/form-data" class="form-control">
+                    {% csrf_token %}
+                    {% if user.icon_image %}
+                        <img class="current_image" src="{{ user.icon_image.url }}">
+                    {% endif %}
+                    <label for="{{ form.email.id_for_label }}">{{ form.email.label_tag }}</label>
+                    {{ form.email }}
+                    {{ form.email.error }}
+                    <label for="{{ form.username.id_for_label }}">{{ form.username.label_tag }}</label>
+                    {{ form.username }}
+                    {{ form.username.error }}
+                    <label for="{{ form.icon_image.id_for_label }}">{{ form.icon_image.label_tag }}</label>
+                    {{ form.icon_image }}
+                    <img id="preview">
+                    <button type="submit" class="btn btn-primary btn-lg">変更を保存</button>
+                    <button class="btn btn-lg btn-block btn-primary" onclick="changeDisplay('user_detail', 'user_detail_form')">キャンセル</button>
+                </form>
+            </div>
         <a href="{% url 'sns:index' %}">戻る</a>
-        </div>
-        <div class="col-md-3">
-
         </div>
     </div>
 {% endblock %}
+{% block js %}
+    <script src="/static/js/user_info.js"></script>
+{% endblock %}
+
+

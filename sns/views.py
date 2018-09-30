@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Message, User
-from .forms import SearchForm, MessageForm
+from .forms import SearchForm, MessageForm, UpdateUserForm
 import datetime
 
 
@@ -32,13 +32,12 @@ def index(request):
     # POST送信の場合
     elif request.method == 'POST':
         delete_search_condition_session(request)
-        search_form = SearchForm()
-        messages = get_message()
+        add_post(request)
         params = {
             'login_user': request.user.username,
             'user_info': request.user,
-            'contents': messages,
-            'search_form': search_form,
+            'contents': get_message(),
+            'search_form': SearchForm(),
             'message_form': MessageForm(),
         }
         return render(request, 'sns/index.html', params)
@@ -71,7 +70,6 @@ def find_message(request):
 
 
 # 投稿を追加する
-@login_required
 def add_post(request):
     message_form = MessageForm(request.POST, request.FILES)
     if not message_form.is_valid():
@@ -84,7 +82,6 @@ def add_post(request):
         msg.save()
     except Exception as e:
         print(e)
-    return redirect('sns:index')
 
 
 # 投稿を検索する
@@ -129,11 +126,11 @@ def delete_search_condition_session(request):
 
 # ユーザー情報表示
 @login_required
-def user_detail(request):
+def user_detail(request, pk):
     # GETならユーザー情報取得
     if request.method == 'GET':
         try:
-            user = get_user(request.user.id)
+            user = get_user(pk)
         except User.DoesNotExist:
             pass
         except User.MultipleObjectsReturned:
@@ -146,7 +143,8 @@ def user_detail(request):
             return None
     params = {
         'login_user': request.user.username,
-        'user_info': get_user(request.user.id),
+        'user_info': get_user(pk),
+        'form': UpdateUserForm(),
     }
     return render(request, 'sns/user/user_info.html', params)
 

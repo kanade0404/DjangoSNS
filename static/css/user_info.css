@@ -1,0 +1,24 @@
+/*.form-control .preview{*/
+    /*background-image: url();*/
+/*}*/
+.form-control input[type="file"]{
+    opacity: 0;
+}
+.user_detail img{
+    border-radius: 50%;
+}
+.user_detail_form .current_image{
+    border-radius: 50%;
+}
+.user_detail .username{
+    position: relative;
+    top: 30px;
+    left: 10px;
+}
+.form-control{
+    position: relative;
+    font-size: 16px;
+    height: auto;
+    padding: 10px;
+    border: none;
+}

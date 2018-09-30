@@ -9,8 +9,8 @@ app_name = 'sns'
 urlpatterns = [
     # path('', MessageViewSet.as_view(), name='index'),
     path('', views.index, name='index'),
-    path('<int:pk>/', views.find_post, name='find_post'),
-    path('add/', views.add_post, name='add_post'),
+    # path('<int:pk>/', views.find_post, name='find_post'),
+    path('update/', views.add_post, name='add_post'),
     path('delete/', views.delete_post, name='delete_post'),
     path('user_info/<int:pk>/', views.user_detail, name='user_info'),
 ]

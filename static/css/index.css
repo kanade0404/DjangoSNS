@@ -1,0 +1,97 @@
+.content {
+    padding: 0 8px;
+    margin: 5px 0 0 0;
+}
+
+
+/**
+ * index
+ */
+.user-name {
+    margin-bottom: 24px;
+    color: #993333;
+}
+
+.post-list ul {
+    width: 100%;
+}
+
+.post-list ul li {
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px dotted #cccccc;
+}
+
+.search_form{
+    display: inline-grid;
+}
+
+.post_box{
+    padding: 0.2em 0.5em;
+    margin: 2em 0;
+    background: #d6ebff;
+    box-shadow: 0px 0px 0px 10px #d6ebff;
+    border: dashed 2px white;
+    display: block;
+}
+.post_box p {
+    margin: 0;
+    padding: 0;
+}
+
+/*
+input file style
+*/
+.post_form label{
+    cursor: pointer;
+    padding: 11px 30px;
+    display: inline-block;
+    background-color: #1f74ff;
+    color: #fff;
+    border-radius: 6px;
+}
+.input_image input{
+    display: none;
+}
+.user_info{
+    display: inline-flex;
+}
+.user_info img{
+    border-radius: 50%;
+    height: 80px;
+}
+.user_info p{
+    font-size: x-large;
+    padding: 15px;
+    margin: 0;
+}
+.left-dashboard{
+    padding: 40px 40px 40px 40px;
+}
+/*
+indexのユーザー情報
+*/
+.user_icon a > img{
+    border-radius: 50%;
+    height: 80px;
+    width: 80px;
+    border: 2px solid #fff;
+    box-sizing: border-box;
+    color: #fff;
+}
+.user_name{
+    position: absolute;
+    top: 100px;
+    left: 150px;
+}
+.user_name a{
+    color: #555555;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.right-dashboard{
+    position: relative;
+    top: 20px;
+    left: 55px;
+}
